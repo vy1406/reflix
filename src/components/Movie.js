@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import MovieDetail from './MovieDetail ';
 
 class Movie extends Component {
-    constructor() {
-        super()
-
-    }
 
     showDetails = () => {
         console.log(<MovieDetail movie={this.props.movie} />)

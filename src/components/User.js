@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Budget from './Budget';
 
 class User extends Component {
     chooseUser = () => {
@@ -8,7 +9,8 @@ class User extends Component {
         return (
             <div>
                 {this.props.user.id} : {this.props.user.name}
-                <button onClick={this.chooseUser}>SelectUser</button> 
+                <button onClick={this.chooseUser}>SelectUser</button>
+                <Budget budget={this.props.user.budget} />
             </div>
         )
     }

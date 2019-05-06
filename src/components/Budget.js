@@ -4,7 +4,7 @@ class Budget extends Component {
 
     render() {
         return (
-            <div></div>
+            <span>{this.props.budget}$</span>
         )
     }
 }

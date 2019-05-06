@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import Landing from './components/Landing';
 import Catalog from './components/Catalog';
-import User from './components/User';
-import Rented from './components/Rented';
+
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
 class App extends Component {
   constructor() {
@@ -12,10 +12,10 @@ class App extends Component {
       curUser: null,
       users:
         [
-          { id: "1", name: "Zlatan Ibrahimovic", movies: [] },
-          { id: "2", name: "R2D2", movies: [] },
-          { id: "3", name: "John Wick", movies: [] },
-          { id: "4", name: "Lady Gaga", movies: [] }
+          { id: "1", name: "Zlatan Ibrahimovic", movies: [], budget: 10 },
+          { id: "2", name: "R2D2", movies: [], budget: 10 },
+          { id: "3", name: "John Wick", movies: [], budget: 10 },
+          { id: "4", name: "Lady Gaga", movies: [], budget: 10 }
         ],
       movies:
         [
@@ -33,80 +33,33 @@ class App extends Component {
       curUser: userDetails
     })
   }
-  addMovieToUser = (movieID) => {
-    let arrMovies = [...this.state.curUser.movies]
-    arrMovies.push(movieID)
-    let currentUser = this.state.curUser
-    currentUser.movies.push(movieID)
 
-    this.setState({
-      curUser: currentUser
-    })
-
-    this.changeRentingStatus(movieID)
-  }
-
-  changeRentingStatus = (movieID) => {
-    let arrMovies = [...this.state.movies]
-    let movieToUpdate = arrMovies.find(m => m.id === movieID)
-    movieToUpdate.isRented = true
-
-    this.setState({
-      movies: arrMovies
-    })
-  }
-  createArrayOfRentedMovies = () => {
-    let arrResult = []
-    this.state.curUser.movies.forEach(
-      movieID => {
-        let curMovie = this.state.movies.find(stateMovie => stateMovie.id === movieID)
-        arrResult.push(curMovie)
-      }
-    )
-    return arrResult
-  }
-
-  returnMovie = (movieID) => {
-    let arrMovies = [...this.state.movies]
-    let movieToReturn = arrMovies.find(m => m.id === movieID)
-    movieToReturn.isRented = false
-
-    this.setState({
-      movies: arrMovies
-    })
-
-    this.removeMovieFromCurrentUser(movieID)
-  }
-
-  removeMovieFromCurrentUser = movieID => {
-    let arrMovies = [...this.state.curUser.movies]
-
-    for (let i = 0; i < arrMovies.length; i++) {
-      if (arrMovies[i] === movieID)
-        arrMovies.splice(i, 1);
-    }
-
-    this.updateUserRents(arrMovies)
-  }
-  updateUserRents = arrMovies => {
-    let currentUserToUpdte = this.state.curUser
-    currentUserToUpdte.movies = arrMovies
-    this.setState({
-      curUser: currentUserToUpdte
-    })
-  }
   render() {
+    // return (
+    //   <div className="App">
+    //     <Landing users={this.state.users} chooseUser={this.selectUser} />
+    //     {this.state.curUser ? <div>
+    //       <User user={this.state.curUser} />
+    //       <Rented userMovies={this.createArrayOfRentedMovies()} returnMovie={this.returnMovie} />
+    //     </div>
+    //       :
+    //       null}
+    //     <Catalog movies={this.state.movies} addMovieToUser={this.addMovieToUser} returnMovie={this.returnMovie} />
+    //   </div>
+    // )
+    const state = this.state
     return (
-      <div className="App">
-        <Landing users={this.state.users} chooseUser={this.selectUser} />
-        {this.state.curUser ? <div>
-          <User user={this.state.curUser} />
-          <Rented userMovies={this.createArrayOfRentedMovies()} returnMovie={this.returnMovie} />
+      <Router>
+
+        <div className="App">
+          <div><Link to="/">Home </Link></div>
+          <div><Link to="/catalog"> Catalog</Link></div>
+
+          <Route exact path="/" render={({match}) => <Landing match={match} state={state} users={this.state.users} chooseUser={this.selectUser} />} />
+          <Route exact path="/catalog" render={({ match }) => <Catalog movies={state.movies} />} />
+
         </div>
-          :
-          null}
-        <Catalog movies={this.state.movies} addMovieToUser={this.addMovieToUser} returnMovie={this.returnMovie} />
-      </div>
+      </Router>
     )
   }
 }
